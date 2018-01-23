@@ -13,14 +13,14 @@ public class PlayerController : MonoBehaviour {
 	public bool m_disableMovement = false;
 
 	private bool m_isJumping = false;
-	private bool m_grounded;
+	private bool m_grounded = false;
 	private Vector3 m_moveDirection = Vector3.zero;
 	private CharacterController m_controller;
-	private Animator m_animationController;
+	//private Animator m_animationController;
 
 	void Awake() {
 		m_controller = GetComponent<CharacterController>();
-		m_animationController = GetComponent<Animator>();
+		//m_animationController = GetComponent<Animator>();
 	}
 
 	void Update() {
@@ -76,8 +76,9 @@ public class PlayerController : MonoBehaviour {
 		// apply gravity and check if im on the ground
 		m_moveDirection.y -= m_gravity * Time.deltaTime;
 		m_grounded = ((m_controller.Move(m_moveDirection * Time.deltaTime)) & CollisionFlags.Below) != 0;
+		Debug.Log (((m_controller.Move(m_moveDirection * Time.deltaTime)) & CollisionFlags.Below) != 0);
 
-		//reset jumping after grounded\
+		//reset jumping after grounded
 		m_isJumping = m_grounded ? false : m_isJumping;
 
 		// TODO: add when we have jumping animations
