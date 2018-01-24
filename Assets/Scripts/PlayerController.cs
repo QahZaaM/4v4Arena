@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
-
 	public float m_speed = 5.0f;
 	public float m_strafeSpeed = 5.0f;
 	public float m_speedMultiplier = 1.0f;
@@ -26,10 +25,7 @@ public class PlayerController : MonoBehaviour {
 	void Update() {
 		if(!m_disableMovement) {
 			if(m_grounded) {
-				// get the direction im strafing
-				if(!(Input.GetAxis("Horizontal") != 0)) {
-					m_moveDirection.x -= Input.GetAxis("Strafing");
-				}
+				m_moveDirection = new Vector3(Input.GetAxis("Strafing"), 0, Input.GetAxis("Vertical"));
 
 				// apply the movement direction
 				m_moveDirection *= m_speed * m_speedMultiplier;
@@ -75,8 +71,7 @@ public class PlayerController : MonoBehaviour {
 
 		// apply gravity and check if im on the ground
 		m_moveDirection.y -= m_gravity * Time.deltaTime;
-		m_grounded = ((m_controller.Move(m_moveDirection * Time.deltaTime)) & CollisionFlags.Below) != 0;
-		Debug.Log (((m_controller.Move(m_moveDirection * Time.deltaTime)) & CollisionFlags.Below) != 0);
+		m_grounded = ((m_controller.Move(m_moveDirection * Time.deltaTime)) & CollisionFlags.Below) !=0;
 
 		//reset jumping after grounded
 		m_isJumping = m_grounded ? false : m_isJumping;
