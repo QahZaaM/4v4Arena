@@ -22,6 +22,10 @@ public class PlayerController : MonoBehaviour {
 		//m_animationController = GetComponent<Animator>();
 	}
 
+	void Start() {
+		Camera.main.GetComponent<CameraController>().m_target = transform;
+	}
+
 	void Update() {
 		if(!m_disableMovement) {
 			if(m_grounded) {
