@@ -16,8 +16,6 @@ public class CameraController : MonoBehaviour {
 	private float m_xDeg = 0.0f;
 	private float m_yDeg = 0.0f;
 	private float m_rotateSpeed = 5.0f;
-	
-
 
 	void Start() {
 		Vector3 angles = transform.eulerAngles;
@@ -25,7 +23,7 @@ public class CameraController : MonoBehaviour {
 		m_yDeg = angles.y;
 	}		
 
-	void LateUpdate(){
+	void LateUpdate() {
 		//Gets the mouse position
 		m_xDeg += Input.GetAxis("Mouse X") * m_rotateSpeed;
         m_yDeg -= Input.GetAxis("Mouse Y") * m_rotateSpeed;
@@ -33,8 +31,8 @@ public class CameraController : MonoBehaviour {
 
 		//Lets scrollwheel zoom in and out
 		m_distance += -(Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime) * m_zoomSpeed * Mathf.Abs(m_distance);
+
 		//sets the minimum scroll distance between camera and player
-		
 		if (m_distance < m_minDistance) {
             m_distance = m_minDistance;
         }
@@ -52,7 +50,7 @@ public class CameraController : MonoBehaviour {
 		}
 
 		//Rotates the camera to mouse position
-		Quaternion rotation = Quaternion.Euler(m_yDeg,m_xDeg,0);
+		Quaternion rotation = Quaternion.Euler(m_yDeg, m_xDeg, 0);
 		Vector3 position = rotation * new Vector3(0.0f, 2.0f, -m_distance) + m_target.position;
 		transform.rotation = rotation;
 		transform.position = position;
