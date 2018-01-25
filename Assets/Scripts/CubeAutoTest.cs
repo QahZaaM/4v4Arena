@@ -12,14 +12,17 @@ public class CubeAutoTest : NetworkBehaviour {
 	private Animator m_animator;
 
 	void Start() {
-		//m_networkAnimator = GetComponent<NetworkAnimator>();
-		//m_animator = GetComponent<Animator>();
+		if(isLocalPlayer) {
+			m_networkAnimator = GetComponent<NetworkAnimator>();
+			m_animator = GetComponent<Animator>();
+		}
 	}
 
 	void Update(){
-		if(Input.GetMouseButtonDown(0)) {
-			//m_animator.SetBool("isAttacking", true);
-			Fire();
+		if(isLocalPlayer) {
+			if(Input.GetMouseButtonDown(0)) {
+				m_animator.SetBool("isAttacking", true);
+			}
 		}
 	}
 
@@ -35,12 +38,15 @@ public class CubeAutoTest : NetworkBehaviour {
 
 		// Destroy the bullet after 2 seconds
 		Destroy(bullet, 2.0f);
-		
 	}
 
 	public void Fire() {
 		if(isLocalPlayer){
 			CmdFire();
 		}
+	}
+
+	public void ResetAttack() {
+		m_animator.SetBool("isAttacking", false);
 	}
 }

@@ -12,10 +12,13 @@ public class CameraController : MonoBehaviour {
 	public float m_minDistance = 2.5f;
 	public float m_maxDistance = 20.0f;
 	public float m_maxXDeg = 60.0f;
+	public float m_autoRotationSpeed = 10.0f;
 	
 	private float m_xDeg = 0.0f;
 	private float m_yDeg = 0.0f;
 	private float m_rotateSpeed = 5.0f;
+	private bool m_alwaysRotatetoRearofTarget = true;
+	private bool m_rotateBehind = false;
 
 	void Start() {
 		Vector3 angles = transform.eulerAngles;
@@ -24,38 +27,52 @@ public class CameraController : MonoBehaviour {
 	}		
 
 	void LateUpdate() {
-		//Gets the mouse position
-		m_xDeg += Input.GetAxis("Mouse X") * m_rotateSpeed;
-        m_yDeg -= Input.GetAxis("Mouse Y") * m_rotateSpeed;
-		float horizontal = Input.GetAxis("Mouse X") * m_rotateSpeed;
-
-		//Lets scrollwheel zoom in and out
-		m_distance += -(Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime) * m_zoomSpeed * Mathf.Abs(m_distance);
-
-		//sets the minimum scroll distance between camera and player
-		if (m_distance < m_minDistance) {
-            m_distance = m_minDistance;
-        }
-
-		//sets the maximum scroll distance between camera and player
-        if (m_distance > m_maxDistance) {
-            m_distance = m_maxDistance;
-        }
-		
-		//sets the amount the camera can move above and below the player
-		if(m_yDeg >= m_maxXDeg) {
-			m_yDeg = m_maxXDeg;
-		} else if (m_yDeg <= -m_maxXDeg) {
-			m_yDeg = -m_maxXDeg;
+		// if you havent already rotated behind the player and you have a target then rotate behind target
+		if(!m_rotateBehind && m_target != null) {
+			RotateBehindTarget();
 		}
 
-		//Rotates the camera to mouse position
-		Quaternion rotation = Quaternion.Euler(m_yDeg, m_xDeg, 0);
-		Vector3 position = rotation * new Vector3(0.0f, 2.0f, -m_distance) + m_target.position;
-		transform.rotation = rotation;
-		transform.position = position;
+		if(m_target != null) {
+			//Gets the mouse position
+			m_xDeg += Input.GetAxis("Mouse X") * m_rotateSpeed;
+			m_yDeg -= Input.GetAxis("Mouse Y") * m_rotateSpeed;
+			float horizontal = Input.GetAxis("Mouse X") * m_rotateSpeed;
 
-		//rotates the player to camera's rotation
-		m_target.transform.Rotate(0, horizontal, 0);
+			//Lets scrollwheel zoom in and out
+			m_distance += -(Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime) * m_zoomSpeed * Mathf.Abs(m_distance);
+
+			//sets the minimum scroll distance between camera and player
+			if (m_distance < m_minDistance) {
+				m_distance = m_minDistance;
+			}
+
+			//sets the maximum scroll distance between camera and player
+			if (m_distance > m_maxDistance) {
+				m_distance = m_maxDistance;
+			}
+			
+			//sets the amount the camera can move above and below the player
+			if(m_yDeg >= m_maxXDeg) {
+				m_yDeg = m_maxXDeg;
+			} else if (m_yDeg <= -m_maxXDeg) {
+				m_yDeg = -m_maxXDeg;
+			}
+
+			//Rotates the camera to mouse position
+			Quaternion rotation = Quaternion.Euler(m_yDeg, m_xDeg, 0);
+			Vector3 position = rotation * new Vector3(0.0f, 2.0f, -m_distance) + m_target.position;
+			transform.rotation = rotation;
+			transform.position = position;
+
+			//rotates the player to camera's rotation
+			m_target.transform.Rotate(0, horizontal, 0);
+		}
 	}
+
+	private void RotateBehindTarget(){
+        float targetRotationAngle = m_target.transform.eulerAngles.y;
+        float currentRotationAngle = transform.eulerAngles.y;
+        m_xDeg = Mathf.LerpAngle(currentRotationAngle, targetRotationAngle, m_autoRotationSpeed * Time.deltaTime);
+		m_rotateBehind = true;
+    }
 }

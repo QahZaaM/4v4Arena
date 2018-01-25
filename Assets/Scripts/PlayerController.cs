@@ -15,11 +15,11 @@ public class PlayerController : MonoBehaviour {
 	private bool m_grounded = false;
 	private Vector3 m_moveDirection = Vector3.zero;
 	private CharacterController m_controller;
-	//private Animator m_animationController;
+	private Animator m_animationController;
 
 	void Awake() {
 		m_controller = GetComponent<CharacterController>();
-		//m_animationController = GetComponent<Animator>();
+		m_animationController = GetComponent<Animator>();
 	}
 
 	void Start() {
@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour {
 	void Update() {
 		if(!m_disableMovement) {
 			if(m_grounded) {
+				ResetJump();
 				m_moveDirection = new Vector3(Input.GetAxis("Strafing"), 0, Input.GetAxis("Vertical"));
 
 				// apply the movement direction
@@ -36,10 +37,9 @@ public class PlayerController : MonoBehaviour {
 
 				// if i press space, jump
 				if(Input.GetButton("Jump")) {
-					//m_animationController.SetTrigger("Jump");
+					m_animationController.SetBool("Jump", true);
+					Debug.Log(m_animationController.GetBool("Jump"));
 					//m_soundMgr.PlayJump();
-					m_moveDirection.y = m_jumpSpeed;
-					
 				}
 
 				// if(m_Disengage) {
@@ -54,12 +54,9 @@ public class PlayerController : MonoBehaviour {
 				// 	m_Disengage = false;
 				// }
 
-				// if(m_moveDirection.magnitude > 0.0f) {
-				// 	m_animationController.SetBool("isRunning", true);
-				// }
-
-				// m_animationController.SetFloat("Forward", m_moveDirection.z);
-				// m_animationController.SetFloat("Right", m_moveDirection.x);
+				// tells the animation controller the direction im moving
+				m_animationController.SetFloat("Forward", m_moveDirection.z);
+				m_animationController.SetFloat("Right", m_moveDirection.x);
 
 				// get my world location and apply the moveDirection to it
 				m_moveDirection = transform.TransformDirection(m_moveDirection);
@@ -72,10 +69,9 @@ public class PlayerController : MonoBehaviour {
 
 		//reset jumping after grounded
 		m_isJumping = m_grounded ? false : m_isJumping;
+	}
 
-		// TODO: add when we have jumping animations
-		// if(m_isJumping) {
-		// 	m_animationController.SetTrigger("Jump");
-		// }
+	public void ResetJump() {
+		m_animationController.SetBool("Jump", false);
 	}
 }
