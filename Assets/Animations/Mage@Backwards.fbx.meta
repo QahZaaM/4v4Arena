@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 21db27aa21ba25c4eb15605a6e9f6e41
-timeCreated: 1516907848
+guid: 5cd84b7e9a520754fab5aa0fee46b097
+timeCreated: 1516910410
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
@@ -137,7 +137,7 @@ ModelImporter:
     400126: Spine
     400128: Spine1
     400130: Spine2
-    7400000: Standing Run Forward
+    7400000: Backwards
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -167,10 +167,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Standing Run Forward
+      name: Backwards
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 44
+      lastFrame: 37
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
