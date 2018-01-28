@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour {
 
 	void Start() {
 		Camera.main.GetComponent<CameraController>().m_target = transform;
+		m_animationController.SetBool("isWarrior", true);
 	}
 
 	void Update() {
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour {
 					if(!m_isJumping) {
 						m_animationController.SetBool("Jump", true);
 						m_isJumping = true;
+						m_moveDirection.y = m_jumpSpeed;
 						//m_soundMgr.PlayJump();
 					}	
 				}
