@@ -36,14 +36,13 @@ public class PlayerController : MonoBehaviour {
 				m_moveDirection *= m_speed * m_speedMultiplier;
 
 				// if i press space, jump
-				if(Input.GetButton("Jump")) {
-					if(m_animationController.GetBool("Jump") == false) {
+				if(Input.GetButtonDown("Jump")) {
+					if(!m_isJumping) {
 						m_animationController.SetBool("Jump", true);
+						m_isJumping = true;
 						//m_soundMgr.PlayJump();
-					}
-					Debug.Log(m_animationController.GetBool("Jump"));
+					}	
 				}
-
 				// if(m_Disengage) {
 				// 	m_moveDirection.y = m_jumpSpeed;
 				// 	m_moveDirection.z = -m_jumpSpeed;
@@ -67,13 +66,15 @@ public class PlayerController : MonoBehaviour {
 
 		// apply gravity and check if im on the ground
 		m_moveDirection.y -= m_gravity * Time.deltaTime;
-		m_grounded = ((m_controller.Move(m_moveDirection * Time.deltaTime)) & CollisionFlags.Below) !=0;
+		m_grounded = ((m_controller.Move(m_moveDirection * Time.deltaTime)) & CollisionFlags.Below) != 0;
 
-		//reset jumping after grounded
+		// reset jumping after grounded
 		m_isJumping = m_grounded ? false : m_isJumping;
 	}
 
+	// resets the jump variables at the end of the jump animation
 	public void ResetJump() {
 		m_animationController.SetBool("Jump", false);
+		m_isJumping = false;
 	}
 }
