@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour {
 
 				// if i press space, jump
 				if(Input.GetButton("Jump")) {
-					if(!m_animationController.GetBool("Jump")) {
+					if(m_animationController.GetBool("Jump") == false) {
 						m_animationController.SetBool("Jump", true);
 						//m_soundMgr.PlayJump();
 					}
