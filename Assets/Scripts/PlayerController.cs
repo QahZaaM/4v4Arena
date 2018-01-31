@@ -5,11 +5,9 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 	public float m_speed = 5.0f;
-	public float m_strafeSpeed = 5.0f;
 	public float m_speedMultiplier = 1.0f;
 	public float m_gravity = 20.0f;
 	public float m_jumpSpeed = 8.0f;
-	public float m_moveBackwardsMultiplier = 0.8f;
 	public bool m_disableMovement = false;
 	public Image[] m_CDMasks;
 
@@ -22,15 +20,17 @@ public class PlayerController : MonoBehaviour {
 	private CharacterController m_controller;
 	private Animator m_animationController;
 	private NetworkEnableScripts m_networkEnableScript;
+	private Warrior m_warriorScript;
 	private float m_abilityCDTime = 5.0f;
 	private float m_movementCDTime = 10.0f;
+	private float m_defaultSpeedMultiplier = 1.0f;
 	private int m_ultimateProgress = 0;
-	
 
 	void Awake() {
 		m_controller = GetComponent<CharacterController>();
 		m_animationController = GetComponent<Animator>();
 		m_networkEnableScript = GetComponent<NetworkEnableScripts>();
+		m_warriorScript = GetComponent<Warrior>();
 	}
 
 	void Start() {
@@ -39,7 +39,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update() {
-
 		// check if you can ult and caps it at 100
 		if(m_ultimateProgress >= 100) {
 			m_ultimateProgress = 100;
@@ -47,6 +46,25 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		if(!m_disableMovement) {
+			if(Input.GetMouseButtonDown(0)) {
+				m_animationController.SetBool("isAttacking", true);
+			}
+
+			if (Input.GetKeyDown(KeyCode.Alpha1) && !m_abilityOnCD) {
+				m_animationController.SetBool("isAbility", true);
+				StartCoroutine(CoolDownSystem(m_abilityCDTime, "Ability"));
+			}
+
+			if(Input.GetKeyDown(KeyCode.Alpha2) && !m_movementOnCD) {
+				m_animationController.SetBool("isMovement", true);
+				StartCoroutine(CoolDownSystem(m_movementCDTime, "Movement"));
+			}
+
+			if(Input.GetKeyDown(KeyCode.Alpha3) && m_canUlt) {
+				m_animationController.SetBool("isUlt", true);	
+				m_canUlt = false;
+			}
+
 			if(m_grounded) {
 				ResetJump();
 				m_moveDirection = new Vector3(Input.GetAxis("Strafing"), 0, Input.GetAxis("Vertical"));
@@ -64,37 +82,6 @@ public class PlayerController : MonoBehaviour {
 					}	
 				}
 
-				if(Input.GetMouseButtonDown(0)) {
-					m_animationController.SetBool("isAttacking", true);
-				}
-
-				if (Input.GetKeyDown(KeyCode.Alpha1) && !m_abilityOnCD) {
-					m_animationController.SetBool("isAbility", true);
-					StartCoroutine(CoolDownSystem(m_abilityCDTime, "Ability"));
-				}
-
-				if(Input.GetKeyDown(KeyCode.Alpha2) && !m_movementOnCD) {
-					m_animationController.SetBool("isMovement", true);
-					StartCoroutine(CoolDownSystem(m_movementCDTime, "Movement"));
-				}
-
-				if(Input.GetKeyDown(KeyCode.Alpha3) && m_canUlt) {
-					m_animationController.SetBool("isUlt", true);	
-					m_canUlt = false;
-				}
-
-				// if(m_Disengage) {
-				// 	m_moveDirection.y = m_jumpSpeed;
-				// 	m_moveDirection.z = -m_jumpSpeed;
-				// 	m_Disengage = false;
-				// } else {	
-				// 	m_animationController.SetBool("Movement",false);
-				// }
-
-				// if(m_grounded) {
-				// 	m_Disengage = false;
-				// }
-
 				// tells the animation controller the direction im moving
 				m_animationController.SetFloat("Forward", m_moveDirection.z);
 				m_animationController.SetFloat("Right", m_moveDirection.x);
@@ -102,14 +89,14 @@ public class PlayerController : MonoBehaviour {
 				// get my world location and apply the moveDirection to it
 				m_moveDirection = transform.TransformDirection(m_moveDirection);
 			}
+
+			// apply gravity and check if im on the ground
+			m_moveDirection.y -= m_gravity * Time.deltaTime;
+			m_grounded = ((m_controller.Move(m_moveDirection * Time.deltaTime)) & CollisionFlags.Below) != 0;
+
+			// reset jumping after grounded
+			m_isJumping = m_grounded ? false : m_isJumping;
 		}
-
-		// apply gravity and check if im on the ground
-		m_moveDirection.y -= m_gravity * Time.deltaTime;
-		m_grounded = ((m_controller.Move(m_moveDirection * Time.deltaTime)) & CollisionFlags.Below) != 0;
-
-		// reset jumping after grounded
-		m_isJumping = m_grounded ? false : m_isJumping;
 	}
 
 	// resets the jump variables at the end of the jump animation
