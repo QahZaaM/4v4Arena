@@ -343,6 +343,7 @@ GameObject:
   - component: {fileID: 114485383147681834}
   - component: {fileID: 114362248369899416}
   - component: {fileID: 114497289412418924}
+  - component: {fileID: 114225277149997526}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2069,6 +2070,25 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114225277149997526
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1271835493557724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e98b4d3a7542321458005004f611a4aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_chargeSpeed: 75
+  m_strafeSpeed: 2
+  m_shieldCollider: {fileID: 0}
+  m_swordCollider: {fileID: 0}
+  m_normalShield: {fileID: 0}
+  m_ultimateShield: {fileID: 0}
+  m_isCharging: 0
+  m_hasDealtDamage: 0
 --- !u!114 &114362248369899416
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2080,7 +2100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53542b807c8f83343ae9a354763821c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_character: isHunter
+  m_character: isWarrior
   m_mageAnim: {fileID: 1271835493557724, guid: 80d59594e0e1f364f8f0ada835dc3110, type: 2}
   m_warriorAnim: {fileID: 1271835493557724, guid: 6642593e7ba94a64b87df81481c0f14d,
     type: 2}
@@ -2100,11 +2120,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_speed: 5
-  m_strafeSpeed: 5
   m_speedMultiplier: 1
   m_gravity: 20
   m_jumpSpeed: 8
-  m_moveBackwardsMultiplier: 0.8
   m_disableMovement: 0
   m_CDMasks: []
 --- !u!114 &114461359321379478
@@ -2158,8 +2176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9bb18246c4f9bf4bb143dda45dc24ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_fireBallPrefab: {fileID: 1472743501957568, guid: 3ad9bac6b018ed34aa84e15ceae4367d,
-    type: 2}
+  m_fireBallPrefab: {fileID: 0}
   m_polyPrefab: {fileID: 0}
   m_blackHolePrefab: {fileID: 0}
   m_oneHandSpellSpawn: {fileID: 0}
